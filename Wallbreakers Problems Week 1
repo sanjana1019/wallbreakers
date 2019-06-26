@@ -1,0 +1,850 @@
+//Wallbreakers Problem Solutions - Week 1
+
+//~~~~~~~~~ Arrays ~~~~~~~~~~~~~~//
+
+//---------------------------Sort Array By Parity ------------------------------//
+class Solution {
+    public int[] sortArrayByParity(int[] A) {
+        
+        int n = A.length; 
+        int[] solArr = new int[n]; 
+        int p = 0; 
+        int m = n-1; 
+        
+        for (int i = 0; i < n; i++){
+            if (A[i] % 2 == 0){
+                //is even. Add to beginning of new array 
+                solArr[p] = A[i]; 
+                p++; 
+            } else {
+                //is odd
+                solArr[m] = A[i]; 
+                m--; 
+            }
+        }
+          
+        return solArr;         
+        
+    }
+}
+
+
+
+//--------------------------- Transpose Matrix ------------------------------//
+
+
+public int[][] transpose(int[][] A) {
+	//get row and col size 
+	int colSize = A[0].length; 
+	int rowSize = A.length; 
+	
+	//create a new matrix
+	int[][] sol = new int [colSize][rowSize]; 
+	
+	for (int i = 0; i < rowSize; i++){
+		for (int j = 0; j < colSize; j++){
+			//switch
+			sol[j][i] = A[i][j]; 
+		}
+	}
+	
+	return sol;
+
+}
+
+
+
+
+
+//--------------------------- Flipping an Image ------------------------------//
+
+class Solution {
+    public int[][] flipAndInvertImage(int[][] A) {
+        //get the number of columns + rows
+		 int numCols = A[0].length; 
+		 int numRows = A.length; 
+		 //Part 1: reverse each row 
+		 for (int i = 0; i < numRows; i++){
+			 //for each row 
+			 //switch the elements in first and last indexes
+			 int a = 0; 
+			 int b = numCols - 1; 
+			 while (a <= b){
+				 int temp =  A[i][a]; 
+				 A[i][a] =  A[i][b]; 
+				 A[i][b] = temp; 
+				 //increment a and decrement b
+				 a++; 
+				 b--; 
+			 }
+		 }
+		//Part 2: invert 
+		 for (int i = 0; i < numRows; i++){
+			 for (int j = 0; j < numCols; j++){
+				 if(A[i][j] == 0){
+					 A[i][j] = 1; 
+				 } else {
+					 A[i][j] = 0; 
+				 }
+			 }
+		 }
+		 
+		//done. return the array
+		return A;
+    }
+}
+
+
+
+
+//~~~~~~~~~ Basic Math ~~~~~~~~~~~~~~//
+
+//----------------------Self Dividing Numbers -------------------------------//
+
+class Solution {
+    public List<Integer> selfDividingNumbers(int left, int right) {
+        
+        ArrayList<Integer> sol = new ArrayList<Integer>(); 
+
+        
+        for (int j = left; j <= right; j++){
+        //for loop goes through every number btwn lower and upper bounds 
+            boolean flag = true; 
+            int originalNum = j; 
+            int i = j; 
+            while (i > 0){
+                int divisor = i % 10; 
+                if (divisor == 0){
+                    flag = false; 
+                    break; 
+                }
+                if (originalNum % divisor != 0){
+                     flag = false; 
+                }
+                i = i/10; 
+            }
+           
+            if (flag){
+                //add to list 
+                sol.add(originalNum); 
+            }        
+        }        
+        return sol;         
+    }
+}
+
+
+
+
+//---------------------------Fizz - Buzz -----------------------------------//
+
+class Solution {
+    public List<String> fizzBuzz(int n) {
+        ArrayList<String> sol = new ArrayList<String>(); 
+        
+        for (int i = 1; i <= n; i++){
+            
+           if (i % 3 == 0 && i % 5 == 0){
+               sol.add("FizzBuzz"); 
+           } else if (i % 3 == 0){
+               sol.add("Fizz"); 
+           } else if (i % 5 == 0){
+               sol.add("Buzz"); 
+           } else { 
+                String num = Integer.toString(i); 
+                sol.add(num); 
+           }
+
+        }
+        return sol; 
+        
+    }
+}
+
+
+//--------------------------- Plus One ------------------------------------//
+class Solution {
+    public int[] plusOne(int[] digits) {
+        int size = digits.length; 
+        int lastIndex = size - 1; 
+        while (lastIndex > 0){
+        	//System.out.println("lastindex: " + lastIndex);
+            if (digits[lastIndex] != 9){
+                //if not 9 then just increment it 
+                 int num = digits[lastIndex]; 
+                 num++; 
+                 digits[lastIndex] = num; 
+                 break; 
+             } else {
+                 //last digit is a 9 
+                 //set it equal to 0 
+                 digits[lastIndex] = 0;
+                 //then look at the number in prev index
+                 lastIndex--; 
+            }
+        }
+  
+        
+        //the index we are at may be index 0 
+        if (lastIndex == 0){
+            if (digits[lastIndex] != 9){
+                //if not 9 then just increment it 
+                 int num = digits[lastIndex]; 
+                 num++; 
+                 digits[lastIndex] = num; 
+             } else {
+            	digits = new int[size+1]; 
+            	digits[0] = 1; 
+               //make the rest 0's
+               for (int i = 1; i < digits.length; i++){
+                   digits[i] = 0; 
+               }
+            }
+        }
+
+        return digits; 
+
+    }
+}
+
+//--------------------------- Excel Sheet Column Number ------------------------------------//
+
+
+	 class Solution {
+    public int titleToNumber(String s) {
+         int sol = 0; 
+        int size = s.length(); 
+        
+        //go through each char in string 
+        for (int i = 0; i < size; i++){
+        	int val = getAscii(s.charAt(i)); 
+        	sol += val * Math.pow(26, size-1-i); 
+        }
+        return sol;
+    }
+    
+    
+      public static int getAscii(char c){
+    	int asciiValue = (c) - 64; 
+    	return asciiValue; 
+    }   
+    
+}
+
+
+//--------------------------- Power of Two ------------------------------------//
+
+	 public boolean isPowerOfTwo(int n) {
+		boolean flag = false; 
+	    while (n > 0){
+	        	  if (n == 1 || n==2){
+	  	            flag = true; 
+	  	            break; 
+	  	        } else {
+	  	            if (n % 2 == 0){
+	  	                n = n/2;  
+	  	            } else {
+	  	                //else n is odd number 
+	  	                flag = false; 
+	  	                break; 
+	  	            }
+	        }
+	      
+
+	 }
+			return flag;
+	 } 
+
+
+
+
+
+
+//~~~~~~~~~ Simple String Manipulation ~~~~~~~~~~~~~~//
+
+//--------------------------- Reverse String ------------------------------------//
+
+	public void reverseString(char[] s) {
+
+		int a = 0; 
+		int b = s.length - 1; 
+		while (a <= b){
+			char temp =  s[a];  
+			s[a] =  s[b]; 
+			s[b] = temp; 
+			//increment a and decrement b
+			a++; 
+			b--; 
+		}
+
+
+		for (char c : s){
+			//System.out.print("here "); 
+			System.out.print(c + " "); 
+		}
+
+	}
+
+
+
+//--------------------------- Detect Capital ------------------------------------//
+
+
+	public boolean detectCapitalUse(String word) {
+		boolean flag = false; 
+		
+		if(word.length() == 1){
+			return true; 
+		}
+		
+		//if the 1st char is uppercase
+		if(Character.isUpperCase(word.charAt(0))) {
+			//if the 2nd char is also uppercase
+			if(Character.isUpperCase(word.charAt(1))) {
+				//case 1: all must be uppercase 
+				for (int i = 1; i < word.length(); i++){
+					if (Character.isLowerCase(word.charAt(i))){
+						System.out.println("1"); 
+						return false; 
+					} 
+					flag = true; 
+				}
+			} else {
+				//the second char is lowercase 
+				//case 2: all rest must be lowercase as well 
+				for (int i = 1; i < word.length(); i++){
+					if (Character.isUpperCase(word.charAt(i))){
+						System.out.println("3"); 
+						return false; 
+					}
+					flag = true; 
+				}
+			}			
+		} else {
+			//1st char is lowercase
+			//then all rest must be lowercase 
+			for (int i = 1; i < word.length(); i++){
+				if (Character.isUpperCase(word.charAt(i))){
+					System.out.println("5"); 
+					return false; 
+				}
+				flag = true; 				
+			}
+			
+		}
+
+	return flag; 	       
+    }
+
+
+//--------------------------- Reverse Words in a String III ------------------------------------//
+
+
+class Solution {
+    public String reverseWords(String s) {
+  	 //split the string 
+		 String[] stringSplit = s.split("\\s+");
+		 
+		 //sol will contain the final reversed string 
+		 StringBuilder sol = new StringBuilder(); 
+		 
+		 //loop through each individual word
+		 for(int i = 0; i < stringSplit.length; i++){
+			 String word = stringSplit[i]; 
+			 //loop through the chars in each word 
+			 for (int j = word.length()-1; j >= 0; j--){
+				 //add in reverse order
+				 sol.append(word.charAt(j));
+			 }
+			 //add space
+			 if (i != stringSplit.length - 1){
+				 sol.append(" ");
+			 }
+
+		 }
+		//return reversed string 
+		return sol.toString();  
+    }
+}
+
+
+//--------------------------- Valid Palindrome ------------------------------------//
+
+class Solution {
+    public boolean isPalindrome(String s) {
+  		 //if it's empty string then valid palindrome 
+		 if (s.equals("")){
+			 return true; 
+		 }
+	
+		//ignore cases. Make it all lowercase
+		 String str = s.toLowerCase();
+		 //take out all the spaces and non-alphabetic characters
+		 str = str.replaceAll("\\s+", ""); 
+		 str = str.replaceAll("[^a-zA-z0-9]", ""); 
+		 str = str.replaceAll("\u0060", "");  //remove backticks
+		 
+		 
+		 //loop through entire string from both ends 
+		 int front = 0; 
+		 int back = str.length() -1; 
+		 while (front < back){
+			 if (str.charAt(front) != str.charAt(back)){
+				 return false; 
+			 }
+			 front++; 
+			 back--; 
+		 }
+		 //done with loop. must be a valid palindrome  
+		 return true; 
+    }
+}
+
+
+
+
+
+//--------------------------- Reverse Vowels of a String ------------------------------------//
+
+
+class Solution {
+    public String reverseVowels(String s) {
+    				//contains vowels 
+		String vowels = "aeiouAEIOU"; 		
+
+		
+		//convert string to a char array 
+		char[] arr = s.toCharArray(); 
+		
+		int front = 0; 
+		int back = arr.length-1; 
+		
+		while (front < back){
+			//if front is a vowel 
+			if (vowels.contains(Character.toString(arr[front]))){
+				//if back is also a vowel 
+				if (vowels.contains(Character.toString(arr[back]))){
+					//switch
+					char temp = arr[front]; 
+					arr[front] = arr[back]; 
+					arr[back] = temp;
+					//increase and decrease
+					front++; 
+					back--; 
+				} else {
+					//back is not a vowel but front is 
+					back--; 
+				}
+				
+			} else {
+				//front not a vowel
+				//but back is a vowel 
+				if (vowels.contains(Character.toString(arr[back]))){
+					//increase front 
+					front++; 
+				} else {
+					//back is not a vowel (neither are)
+					front++; 
+					back--; 
+				}
+			}
+
+		}
+				
+		return String.valueOf(arr);  
+    }
+}
+
+//--------------------------- Longest Common Prefix ------------------------------------//
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        String sol = ""; 
+		int arrLength = strs.length; 
+		 if (arrLength == 0){
+	            return ""; 
+	        }
+		 
+		 //get size of longest word
+		 int longestWordLength = strs[0].length(); 
+	
+		 for (int i = 1; i < strs.length; i++){
+			 String word = strs[i]; 
+			 if (word.length() > longestWordLength){
+				 longestWordLength = word.length(); 
+				}
+		 }
+		 
+		
+		 //create a char array matrix
+		 char[][] arr = new char[arrLength][longestWordLength]; 
+		
+		 //put all the words in the matrix
+		 int i = 0; 
+		 for (int k = 0; k < strs.length; k++){
+			 String word = strs[k]; 
+			 //put the word in a row of the matrix 
+			 for (int j = 0; j < word.length(); j++){
+				 arr[i][j] = word.charAt(j); 
+			 }
+			 i++; 
+		 }
+		 
+		 
+		 //look at each column and see if the letters are same 
+		 int colNum = 0; 
+		 boolean isSame = true;
+		 
+		 while (colNum < arr[0].length){
+			 char c = arr[0][colNum]; //get char at arr[0][0]
+			 for (int rowNum = 1; rowNum < arr.length; rowNum++){
+				 if (arr[rowNum][colNum] != c){
+					 isSame = false; 
+				 }
+			 }
+			 if (isSame){
+				 sol = sol + c; 
+			 }
+			 colNum++; 
+		 }		 
+		return sol;		
+    }
+}
+
+
+
+//~~~~~~~~~ Simple Bitwise Manipulation ~~~~~~~~~~~~~~//
+
+//--------------------------- Number Complement ------------------------------------//
+
+class Solution {
+    public int findComplement(int num) {
+        //step 1: convert decimal to binary 
+		//step 2: get the complement by switching 0 to 1 and vice versa
+		//step 3: take the complement and convert back to decimal
+		double sol = 0; 
+		int power = 0; 
+		while (num > 0){
+			int CompDig = -1; 
+			int remainder = num % 2;
+			num = num/2; 
+			if (remainder == 0){
+				CompDig = 1; 
+			} else {
+				CompDig = 0; 
+			}
+			sol = sol + CompDig * Math.pow(2, power); 
+			power++; 			
+		}			
+		return (int) sol;
+    }
+}
+
+
+
+//--------------------------- Hamming Distance ------------------------------------//
+class Solution {
+    public int hammingDistance(int x, int y) {
+        int num1 = Math.min(x, y); 
+		int num2 = Math.max(x, y); 
+		int count = 0; 
+		while (num2 > 0){
+			int remainder1 = num1 % 2;
+			int remainder2 = num2 % 2;
+			if (remainder1 != remainder2){
+				count++; 
+			}
+
+			num1 = num1/2; 
+			num2 = num2/2; 				
+		}
+		
+		//System.out.println("count here is: " + count);			
+		return count;	
+    }
+}
+
+
+
+
+//--------------------------- Binary Gap ------------------------------------//
+
+class Solution {
+    public int binaryGap(int N) {
+        		int index1 = 0; 
+		int index2 = 0; 
+		int maxCount = 0; 
+		
+		boolean foundFirstOne = false; 
+		
+		String binStr = getBinary(N);
+		//get index of first 1
+		index1 = binStr.indexOf('1'); 
+		int i = index1 + 1; 
+		System.out.println("index1 initially: " + index1);
+		while (i < binStr.length()){
+			System.out.println("index1 in loop: " + index1);
+			//get index of next 1
+			if (binStr.charAt(i) == '1'){
+				index2 = i; 
+				//if we found a larger maxCount
+				if ((index2 - index1) > maxCount){
+					maxCount = index2 - index1; 
+				}
+				index1 = index2; 
+			}
+
+	
+			i++; 
+		}
+		
+		return maxCount;
+    }
+    
+    
+    
+    
+    /**
+	 * helper function
+	 * @param num is number to be turned to binary 
+	 * @return binary string 
+	 */
+	public static String getBinary(int num){ 
+		String sol = ""; 
+
+		while (num > 0){ 
+			int remainder = num % 2;
+			num = num/2; 
+			sol = remainder + sol; 			
+		}
+	
+		//convert to char array  
+		return sol; 
+	}    
+    
+}
+
+
+
+
+
+
+
+//--------------------------- Single Number ------------------------------------//
+
+class Solution {
+    public int singleNumber(int[] nums) {
+       //sort the array
+		Arrays.sort(nums);
+		
+	    //now loop through the sorted array
+		int sol = nums[nums.length-1]; 
+		for (int i = 0; i < nums.length-1; i = i + 2){
+			if (nums[i] != nums[i+1]){
+				sol = nums[i]; 
+				break; 
+			}
+		}
+		
+		return sol; 
+    }
+}
+
+
+
+
+
+//~~~~~~~~~ HashMaps and Sets ~~~~~~~~~~~~~~//
+
+//--------------------------- Valid Anagram ------------------------------------//
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int size_s = s.length(); 
+		int size_t = t.length(); 
+		
+		//if size not same, will be false 
+		if (size_s != size_t){
+			return false; 
+		}
+				
+		//convert string to array of chars
+		char[] sArr = s.toCharArray(); 
+		char[] tArr = t.toCharArray(); 
+		
+		//sort both the arrays 
+		Arrays.sort(sArr);
+		Arrays.sort(tArr);
+		
+		//loop
+		for (int i = 0; i < size_s; i++){
+			if (sArr[i] != tArr[i]){
+				return false; 
+			}
+		}
+	
+		return true;
+    }
+}
+
+
+
+//--------------------------- Two Sum ------------------------------------//
+
+public int[] twoSum(int[] nums, int target) {
+        	int[] sol = new int[2]; 
+		
+	        for (int i = 0; i < nums.length; i++){
+	        	for (int j = i+1; j < nums.length; j++){
+		        	if (nums[i] + nums[j] == target){
+		        		sol[0] = i; 
+		        		sol[1] = j; 
+		        	}
+		        }
+	        }
+		
+	        return sol;  
+    }
+
+
+
+
+
+//~~~~~~~~~ Union Find ~~~~~~~~~~~~~~//
+
+//--------------------------- Friend Circles ------------------------------------//
+
+class Solution {
+    public int findCircleNum(int[][] M) {
+         int rows = M.length;
+		 int cols = M[0].length; 
+		 
+		 //create an array to hold arr
+		 int[] arr = new int[rows]; 
+		 //initialize. Each person is their own friend (at the very least)
+		 for (int i = 0; i < arr.length; i++){
+			 arr[i] = i; 
+		 }
+		 
+		 //a person is labeled by which row they're in
+		 //check the matrix for 1's (indicates friendship)
+		 for (int i = 0; i < rows; i++){
+			 for (int j = 0; j < cols; j++){
+				 if (M[i][j] == 1){
+					 union(i,j, arr); 
+				 }
+			 }
+		 }
+		 
+		 
+		 //new array with the root parent of each index 
+		 int[] sol = new int[rows]; 
+		 for (int i = 0; i < arr.length; i++){
+			 sol[i] = find(i, arr);  
+		 }
+		 
+		 //sort sol array
+		 Arrays.sort(sol);
+		 int count = 0; 
+		 int i = 1;  
+		 //loop through it and count how many diff roots there are 
+		 while (i < sol.length){
+			 if (sol[i] != sol[i-1]){
+				 count++; 
+			 }
+			 i++; 
+		 }				 
+		return count+1;	
+    }
+    
+    public static int find(int x, int[] arr){
+	     if (arr[x] == x){
+	    	 return x; 
+	     } else {
+	    	 return find(arr[x], arr);
+	     }	    	        
+	 }
+
+	 
+	 public static void union(int x, int y, int[] arr){
+	    int rootOfx = find(x, arr); 
+	    int rootOfy = find(y, arr); 
+	    arr[rootOfx] = rootOfy; 
+	 }
+       
+    
+}
+
+
+//--------------------------- Surrounded Regions * INCOMPLETE* ------------------------------------//
+
+//**** WARNING : incomplete solution - will not work
+//I am just copying what I had so far. Did not have time to finish
+
+ public void solve(char[][] board) {
+	       
+		 
+		 int rowNum = board.length; 
+		 int colNum = board[0].length; 
+		 
+		 //create new board
+		 char[][] sol = new char[rowNum][colNum]; 
+		 
+		 if (rowNum <=2 || colNum <= 2){
+			 System.out.println("board too small");
+			 //print it out same way it was entered 
+			 System.out.println(Arrays.deepToString(board).replace("], ", "]\n"));
+		 } else {
+			 for (int i = 0; i < rowNum; i++){
+				 for (int j = 0; j < colNum; j++){
+					 if(board[i][j] == 'O' && connectedToBorder(i,j, board) == false){
+						 sol[i][j]= 'X'; 
+					 } else {
+						 //leave as is
+						 sol[i][j]= board[i][j];
+					 }
+				 }
+			 }
+			 System.out.println(Arrays.deepToString(sol).replace("], ", "]\n"));
+		 }		 	
+	}
+	 
+	 public static boolean connectedToBorder(int i, int j, char[][] board){
+		 System.out.println("i: " + i + " j: " + j);
+		 int rows = board.length-1; 
+		 int cols = board[0].length-1; 
+		 boolean isConnectedToBorder = false; 
+		 boolean visited = false; 
+		 if (board[i][j] == 'X'){
+			 //ignore 
+		 }
+		 //if current spot has a O and the O is at the border. return true 
+		 if (board[i][j] == 'O' && (i == 0 || i == rows || j == 0 || j == cols)){
+			 return true;  
+		 } else if (board[i][j] == 'O' && (i != 0 && i != rows && j != 0 && j != cols)) {
+			 visited = true; 
+			 //else if curr is O but it's not on the border 
+			 //check its left, right, top, and bottom spots 
+			 //recurse on these positions only if they contain an O
+			 if (board[i][j-1] == 'O' && visited == false){
+				 connectedToBorder(i, j-1, board); //left
+			 }
+			 if (board[i][j+1] == 'O' && visited == false){
+				 System.out.println("here");
+				 connectedToBorder(i, j+1, board); //right
+			 }
+			 if (board[i+1][j] == 'O' && visited == false){
+				 connectedToBorder(i+1, j, board); //top
+			 }
+			 if (board[i-1][j] == 'O' && visited == false){
+				 connectedToBorder(i-1, j, board); //bottom
+			 }
+		 }
+		 
+		 return isConnectedToBorder; 
+	 }
+
+
+
+
+
