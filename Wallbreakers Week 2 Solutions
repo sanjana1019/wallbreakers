@@ -1,0 +1,919 @@
+//Wallbreakers Week 2 Solutions
+
+//------------------- HashMaps and HashSets ------------------//
+
+//------------------------------ Jewels and Stones ----------------------------//
+
+
+class Solution {
+    public int numJewelsInStones(String J, String S) {
+          Set <Character> set = new HashSet<Character>();
+        for (int i = 0; i < J.length(); i++){
+        	set.add(J.charAt(i)); 
+        }
+        
+        int count = 0; 
+        for (int i = 0; i < S.length(); i++){
+        	if (set.contains(S.charAt(i))){
+        		count++; 
+        	}
+        }
+        
+		return count;
+    }
+}
+
+//------------------------------ Unique Morse Code Words ----------------------------//
+
+class Solution {
+    public int uniqueMorseRepresentations(String[] words) {
+        		
+String [] morseValues = {".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."}; 
+			
+		//create a set to store all the unique codes (sets have no dupes)
+		Set<String> codeSet = new HashSet<String>(); 
+		//convert input words into morse code 
+		for (int i = 0; i < words.length; i++){
+			StringBuilder wordMorseCode = new StringBuilder(); 
+			String word = words[i]; 
+			for (int j = 0; j < word.length(); j++){
+				int index = (int)word.charAt(j) - 97; 
+				String letterCode = morseValues[index]; 
+				wordMorseCode.append(letterCode); 
+			}
+			//word is complete. add word to a set 
+			codeSet.add(wordMorseCode.toString()); 
+		}
+		
+		//return size of the set
+		return codeSet.size(); 
+    }
+}
+
+//------------------------------ Happy Numbers ----------------------------//
+class Solution {
+    public boolean isHappy(int n) {
+        boolean flag = false; 
+		//create set 
+		Set<Integer> set = new HashSet<Integer>(); 
+		while (!set.contains(n)){
+			//add n (which is later the sum) to set
+			set.add(n); 
+			double sum = 0; 
+			while (n > 0){	
+				//System.out.println("n is " + n);
+				sum = sum + Math.pow((n % 10), 2);
+				n = n/10; 
+			}
+			//System.out.println("sum is " + sum);
+			if (sum == 1){
+				return true; 
+			}
+			n = (int)sum; 
+		}
+		return flag;
+    }
+}
+
+//------------------------- Uncommon Words from 2 Sentences -------------------//
+class Solution {
+    public String[] uncommonFromSentences(String A, String B) {
+		String[] arrA = A.split(" "); 
+		String[] arrB = B.split(" "); 
+
+
+		//will have the words in each sent that don't have any duplicates
+		Set<String> setA = new HashSet<String>();
+		Set<String> setB = new HashSet<String>();
+		Set<String> dontIncludeA = new HashSet<String>();
+		Set<String> dontIncludeB = new HashSet<String>();
+
+		//iterate through arrA and find words that are uncommon. add to setA
+		for (int i = 0; i < arrA.length; i++){
+			if (!setA.contains(arrA[i]) && !dontIncludeA.contains(arrA[i])){
+				if (!dontIncludeB.contains(arrA[i])){
+					//set does not contain the word then add it to the set
+					setA.add(arrA[i]); 
+				}
+			} else {
+				//set already has the word. remove this word from set. dupe is removed. 
+				setA.remove(arrA[i]); 
+				//add this word
+				dontIncludeA.add(arrA[i]); 
+			}
+		}
+
+		//iterate through arrB and find words that are uncommon. add to setB
+		for (int i = 0; i < arrB.length; i++){
+			if (!setB.contains(arrB[i]) && !dontIncludeB.contains(arrB[i])){
+				if (!dontIncludeA.contains(arrB[i])){
+					//set does not contain the word then add it to the set
+					setB.add(arrB[i]); 
+				}
+			} else {
+				//set already has the word. remove this word from set. dupe is removed. 
+				setB.remove(arrB[i]); 
+				dontIncludeB.add(arrB[i]);
+			}
+		}
+		
+		//do another check through setA		
+		 for (String str : dontIncludeB) {
+			 if(setA.contains(str)){
+				setA.remove(str); 
+			}
+		 }
+		 
+		 
+
+		System.out.println("setA: " + setA);
+		System.out.println("setB: " +setB);
+		
+		//make a copy of setA
+		Set<String> setAcopy = new HashSet<String>(setA);
+		System.out.println("setAcopy: " + setAcopy);
+		
+		//remove all from set A that are in set B
+		setA.removeAll((setB)); 
+		System.out.println("setA removedB: " + setA);
+		
+		//remove all from set B that are in set A (copy)
+		setB.removeAll(setAcopy);
+		System.out.println("setB removedA: " +setB);
+	
+
+		//create array to hold the solution
+		String[] sol = new String[setA.size() + setB.size()];
+		int k = 0; 
+		for (String s : setA){
+			sol[k] = s; 
+			k++; 
+		}
+		
+		int b = setA.size(); 
+		for (String s : setB){
+			sol[b] = s; 
+			b++; 
+		}
+
+		return sol;  
+
+    }
+}
+
+//------------------------------ Distribute Candies ----------------------------//
+class Solution {
+    public int distributeCandies(int[] candies) {
+        //create a set and add candies to it 
+		 Set<Integer> set = new HashSet<Integer>(); 
+		 //to find how many unique candies there are
+		 for (int i = 0; i < candies.length; i++){
+			 set.add(candies[i]); 
+		 }
+
+		 //max num of candies sister can have is 1/2(n). n is even
+		 int half = (int) ((int)(candies.length)*(0.5)); 
+	
+		 //get the smaller number and return it		 		 
+		return Math.min(half, set.size());
+    }
+}
+
+//--------------Groups of Special Equivalent Strings ----------------------------//
+
+// Note : My solution works when run with the manually input test case but fails on the same test case when 
+// I submit my code. Not sure why this error is occuring (I think something is off with the leetcode test cases.)
+// It seems others on the discussion section have also complained about this
+class Solution {
+    public int numSpecialEquivGroups(String[] A) {
+        //create a hashSet to hold the solutions 
+		   Set<String> setSol = new HashSet<String>();
+		   
+		   //loop through the array 
+	        for (int i = 0; i < A.length; i++) {
+	        	//get the individual string 
+	        	String str = A[i]; 
+	        	//create hashmaps for even and odd indexes
+	        	Map<Character, Integer> hmEven = new HashMap<Character, Integer>(); 
+	        	Map<Character, Integer> hmOdd = new HashMap<Character, Integer>(); 
+	        	//loop through each string in array
+	        	for (int j = 0; j < str.length(); j++){
+	        		//get the chars at even + odd indexes and put in hmap
+	        		if (j % 2 == 0){
+	        			//even index
+	        			addToMap(hmEven, str.charAt(j)); 
+	        		} else {
+	        			//odd index
+	        			addToMap(hmOdd, str.charAt(j)); 
+	        		}	        		
+	        	}
+	        	String SpecString = hmEven.toString() + hmOdd.toString();
+	            setSol.add(SpecString);
+	        }
+	        //get size of set and return it 
+	        int size = setSol.size(); 
+            System.out.println("size is:" + size);
+			return size;	     
+    }
+    
+    	 public static void addToMap(Map<Character, Integer>hm, char c){
+			if (hm.containsKey(c)){
+				//if key already exists
+				//get the count and update it
+				 int count = hm.get(c); 
+				 count++; 
+				 hm.put(c, count); 
+			} else {
+				//seeing key for 1st time 
+				hm.put(c, 1); 
+			}
+	 }
+       
+}
+
+//------------------------------ Intersection of 2 Arrays ----------------------------//
+
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1 = new HashSet<Integer>();
+		Set<Integer> set2 = new HashSet<Integer>();
+		
+		for (int i = 0; i < nums1.length; i++){
+			set1.add(nums1[i]); 
+		}
+		
+		for (int i = 0; i < nums2.length; i++){
+			set2.add(nums2[i]); 
+		}
+		
+		set1.retainAll(set2); 
+		
+		//create array to hold the solution
+		int[] sol = new int[set1.size()];
+		int k = 0; 
+		for (Integer n : set1){
+			sol[k] = n; 
+			k++; 
+		}	
+		return sol;
+    }
+}
+
+//------------------------------ Valid Sodoku ----------------------------//
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        boolean flag = true; 
+		int rows = board.length; 
+		int cols = board[0].length; 
+
+
+
+		//go through each row 		
+		for (int i = 0; i < rows; i++){
+			int j = 0; 
+			Set<Character> setRows = new HashSet<Character>(); //new set for each row
+			while (j < cols){
+				if (board[i][j] != '.'){			
+					if (!setRows.contains(board[i][j])){
+						setRows.add(board[i][j]);
+					} else {
+						//set already contains the number 
+						return false; 
+					}
+				}
+
+				j++; 
+			}
+		}
+
+		//go through each col 
+		for (int i = 0; i < cols; i++){
+			int j = 0; 
+			Set<Character> setCols = new HashSet<Character>(); //new set for each row
+			while (j < rows){
+				if (board[j][i] != '.'){			
+					if (!setCols.contains(board[j][i])){
+						setCols.add(board[j][i]);
+					} else {
+						//set already contains the number 
+						return false; 
+					}
+				}
+				j++; 
+			}
+		}
+
+		//go through each 3x3 box and check
+		for (int p = 0; p < 3; p++){
+			for (int q = 0; q < 3; q++){
+				Set<Character> setBox = new HashSet<Character>(); //new set for each box
+				int R = p*3; 
+				int C = q*3; 
+				for (int i = R; i < R + 3; i++){
+					for (int j = C; j < C + 3; j++){
+						if (board[i][j] != '.'){			
+							if (!setBox.contains(board[i][j])){
+								setBox.add(board[i][j]);
+							} else {
+								//set already contains the number 
+								return false; 
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return flag;               
+	
+    }
+}
+
+//------------------------------ Isomorphic Strings ----------------------------//
+import java.util.Collection;
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        		
+		//create a hashMap
+		Map<Character, Character> hm = new HashMap<Character, Character>(); 
+		
+		for (int i = 0; i < s.length(); i++){
+			char c = s.charAt(i); 
+			//if the hashmap already contains the character key
+			//then check if its the same as the character in string t at i
+			if (hm.containsKey(c)){
+				if (hm.get(c) != t.charAt(i)){
+					//not isomorphic
+					return false; 					
+				}
+			} else {			
+				//else the hashmap doesn't have an entry for the character 
+				hm.put(c, t.charAt(i)); 
+			}
+
+		}
+		//System.out.println(hm);
+		
+		//check if hm has any duplicate values
+		Collection<Character> valuesList = hm.values();
+		Set<Character> valuesSet = new HashSet<Character>(hm.values());		
+		if(valuesList.size() != valuesSet.size()){
+			return false; 
+		}
+		return true;
+    }
+}
+
+
+//------------------------------ Word Pattern ----------------------------//
+import java.util.Collection;
+class Solution {
+    public boolean wordPattern(String pattern, String str) {
+        String[] words = str.split(" ");
+		if (words.length != pattern.length()){
+			return false; 
+		}
+		
+		//create a hashMap
+		Map<Character, String> hm = new HashMap<Character, String>(); 
+		
+		for (int i = 0; i < pattern.length(); i++){
+			char c = pattern.charAt(i); 
+			//if the hashmap already contains the character key
+			//then check if its the same as the word in words[] at i 
+			if (hm.containsKey(c)){
+				if (!hm.get(c).equals(words[i])){
+					//not isomorphic
+					return false; 					
+				}
+			} else {	
+				//else the hashmap doesn't have an entry for the character 
+				hm.put(c, words[i]); 
+			}
+		}		
+		//check if hm has any duplicate values
+		Collection<String> valuesList = hm.values();
+		Set<String> valuesSet = new HashSet<String>(hm.values());		
+		if(valuesList.size() != valuesSet.size()){
+			return false; 
+		}
+				
+		return true; 
+    }
+}
+
+//----------------------------- Design HashMap ----------------------------//
+class MyHashMap {
+
+    
+	private LinkedList<Node>[] hashTable; 
+
+
+	public class Node {
+		Integer key;
+		Integer val;
+		Node(Integer key, Integer value) {
+			this.key = key;
+			this.val = value;
+		}
+		public Integer getKey() {
+			return key;
+		}
+		public void setKey(Integer key) {
+			this.key = key;
+		}
+		public Integer getVal() {
+			return val;
+		}
+		public void setVal(Integer val) {
+			this.val = val;
+		}		
+		
+	}
+
+	/** Initialize your data structure here. */
+	public MyHashMap() {
+		hashTable = new LinkedList[1000000]; 
+	}
+
+	/** value will always be non-negative. */
+	//Insert a (key, value) pair into the HashMap. If the value already exists in the HashMap, update the value.
+	public void put(int key, int value) {
+		//create a new node object using the key + val passed in 
+		Node node = new Node(key, value); 
+		//first find the hashcode
+		Integer k = (Integer)key; 
+		//get the index in the array 
+		int pos = k.hashCode() % hashTable.length;     
+		//if this pos in array already has linked list 
+		if (hashTable[pos] != null){
+			//go to that pos and get the linkedlist of entries 
+			LinkedList<Node> ll = hashTable[pos]; 
+			//traverse the linked list 
+			for (int i = 0; i < ll.size(); i++){
+				//get the node at index
+				Node entry = ll.get(i); 
+				//check entry's key and see if it matches node's key
+				if (entry.key == node.key){
+					//if it does, then remove this entry
+					ll.remove(entry); 
+				}
+			}
+			//regardless we add new entry to linked list (this also updates) 
+			ll.add(node); 
+		} else {
+			//pos is null. create new ll and add node to it
+			LinkedList<Node> ll = new LinkedList<Node>();  
+			//add node
+			ll.add(node); 
+			//put into array at this pos
+			hashTable[pos] = ll; 
+		}
+	}
+
+		
+		/** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
+		 * Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+		public int get (int key) {
+			//this is the value we're trying to return 
+			int retVal = -1; 
+			//get the index in the array 
+			Integer k = (Integer)key; 
+			int pos = k.hashCode() % hashTable.length;
+			//if this pos in array already has linked list 
+			if (hashTable[pos] != null){
+				//go to that pos and get the linkedlist of entries 
+				LinkedList<Node> ll = hashTable[pos]; 
+				//traverse the linked list 
+				for (int i = 0; i < ll.size(); i++){
+					//get the node at each index
+					Node entry = ll.get(i); 
+					//check entry's key and see if it matches key we're looking for 
+					if (entry.key == key){
+						//if it does, then return the val
+						retVal = entry.getVal();  						
+					}
+				}
+			} 		
+			//returns -1 if no match found 
+			return retVal; 
+		}	
+		
+				
+		
+		/** Removes the mapping of the specified value key if this map contains a mapping for the key.
+		 * Remove the mapping for the value key if this map contains the mapping for the key. */
+		public void remove(int key) {
+				Integer k = (Integer)key; 
+				int pos = k.hashCode() % hashTable.length;   
+				//if this pos in array already has linked list 
+				hashTable[pos] = null;
+			
+		}
+			
+	
+}
+
+
+
+//-----------------------------Design HashSet ----------------------------//
+class MyHashSet {
+
+	private ArrayList <Integer> al; 
+	
+	
+	 /** Initialize your data structure here. */
+    public MyHashSet() {
+    	al = new ArrayList<Integer>(); 
+    }
+    
+    public void add(int key) {
+    	//only add key if key doesn't already exist in list
+    	if (!al.contains(key)){
+            al.add(key); 
+        }        
+    }
+    
+    public void remove(int key) {
+        if (al.contains(key)){
+        	//loop through al and remove it
+        	for (int i = 0; i < al.size(); i++){
+        		if (al.get(i) == key){
+        			al.remove(i); 
+        		}
+        	}
+        } 
+    }
+    
+    /** Returns true if this set contains the specified element */
+    public boolean contains(int key) {
+    	boolean flag = false; 
+    	if (al.contains(key)){
+    		flag = true; 
+    	}
+    	//else returns false 
+		return flag;
+        
+    }
+}
+
+
+
+
+
+
+//------------------- MultiSets ------------------//
+
+
+//----------------------------- Find all Anagrams in a String ----------------------------//
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        //create an al to hold sol
+		 ArrayList<Integer> sol = new ArrayList<Integer>();
+		 
+		//create array to store count of pattern's letters
+		int[] arrPat = new int [26]; 
+		for (int k = 0; k < p.length(); k++){
+			//get char, increase count 
+			arrPat[p.charAt(k) - 97]++; 
+		}
+		
+		
+		for(int i = 0; i <= s.length()-p.length(); i++){
+			//get the substring that corresponds to patt's length
+			String sub = s.substring(i, i + p.length());
+			//add each char in substring to another array for freq 
+			int[] arrStr = new int [26]; 
+			for (int m = 0; m < sub.length(); m++){
+				arrStr[sub.charAt(m) - 97]++; 
+			}
+			//check if two arrays are equal. if they are, then anagram
+			if(Arrays.equals(arrPat, arrStr)){
+				//get the index and add it to sol
+				sol.add(i); 
+			}		
+		}
+		
+		 return sol;
+        	         
+
+    }
+}
+
+
+//----------------------------- First Unique Character in a String ----------------------------//
+
+class Solution {
+    public int firstUniqChar(String s) {
+        
+		 //create a hashmap
+		 Map<Character, Integer> hm = new HashMap<Character, Integer>(); 
+		 
+		 //loop through and find the count of each char 
+		 //put in hashmap
+		 for (int i = 0; i < s.length(); i++){
+			 //if hm already contains the char
+			 if (hm.containsKey(s.charAt(i))){
+				 //get the count and update it
+				 int count = hm.get(s.charAt(i)); 
+				 count++; 
+				 hm.put(s.charAt(i), count); 
+			 } else {
+				 //seeing char for 1st time
+				 hm.put(s.charAt(i), 1); 
+			 }
+		 }
+		 
+		 int index = -1; 
+		 for (int i = 0; i < s.length(); i++){
+			 //check which char has no duplicates 
+			 if (hm.get(s.charAt(i)) == 1){
+				 //found it. get the position i 
+				 index = i; 
+				 //break out of loop 
+				 break;
+			 }
+		 }
+		 
+		 //if did not find, -1 will be returned 
+		return index;	   
+    }
+}
+
+//----------------------------- Subdomain Visit Count ----------------------------//
+class Solution {
+    public List<String> subdomainVisits(String[] cpdomains) {
+        //create a list that will return the solution
+		ArrayList<String> sol = new ArrayList<String>(); 
+		
+		//create a hashmap to store name and count 
+		Map<String, Integer> hm = new HashMap<String, Integer>();
+		
+		//loop through array of cpdomains
+		for (int i = 0; i < cpdomains.length; i++){
+			//get the individual domain count+name 
+			String domain = cpdomains[i]; 
+			//split by space. index 0 = count. index 1 = name
+			String[] domArr = domain.split(" ");
+			//get the count. convert string to int
+			int siteCount = Integer.parseInt(domArr[0]); 
+			String domName = domArr[1]; 
+			//add this entire name to hm with its count 
+			addToMap(hm, domName, siteCount); 
+			//split domName into parts based on period
+			String[] domNameArr = domName.replaceAll("\\.", " ").split(" "); 
+			//get length of the domNameArr
+			int arrSize = domNameArr.length; 
+			if (arrSize == 2){
+				//put "com" in hmap
+				addToMap(hm, domNameArr[1], siteCount);
+				//hm.put(domNameArr[2], siteCount);
+			} else if (arrSize == 3){
+				String str1 = domNameArr[1] + "." + domNameArr[2]; 
+				//put it in the hmap
+				addToMap(hm, str1, siteCount); 
+				//hm.put(str1, siteCount); 
+				//put "com" in hmap
+				addToMap(hm, domNameArr[2], siteCount); 
+				//hm.put(domNameArr[2], siteCount); 			
+			}
+			
+		}	
+				
+		//loop through the hm and extract the count and name from the entries 
+		 for (Map.Entry<String, Integer> entry : hm.entrySet()) {
+			    String anEntry = entry.getValue() + " " + entry.getKey(); 
+			    sol.add(anEntry); 
+			}		
+		
+		return sol;        
+    }
+    
+    
+        	
+	public static void addToMap(Map<String, Integer>hm, String domName, int siteCount){
+		if (hm.containsKey(domName)){
+			//if key already exists
+			//get the count and update it
+			 int count = hm.get(domName); 
+			 count = count + siteCount; 
+			 hm.put(domName, count); 
+		} else {
+			//seeing key for 1st time 
+			hm.put(domName, siteCount); 
+		}				
+	}
+    
+    
+}
+ 
+    
+//----------------------------- Find the Difference ----------------------------//
+class Solution {
+    public char findTheDifference(String s, String t) {
+		
+		//create a hashmap
+		 Map<Character, Integer> hm = new HashMap<Character, Integer>();
+		 
+		//find the longer string 
+		 String maxStr = ""; 
+		 String otherStr = ""; 
+		 if (Math.max(s.length(), t.length()) == s.length()){
+		 	maxStr = s; 
+		 	otherStr = t; 
+		 } else {
+		 	maxStr = t; 
+		 	otherStr = s; 
+		 }
+		 
+		//loop through string s and find the count of each char 
+		 //put in hashmap
+		 for (int i = 0; i < otherStr.length(); i++){
+			 //if hm already contains the char
+			 if (hm.containsKey(otherStr.charAt(i))){
+				 //get the count and update it
+				 int count = hm.get(otherStr.charAt(i)); 
+				 count++; 
+				 hm.put(otherStr.charAt(i), count); 
+			 } else {
+				 //seeing char for 1st time
+				 hm.put(otherStr.charAt(i), 1); 
+			 }
+		 }
+		 char c = '\0'; 
+	
+		 
+		 //loop through string t and decrease the count of each char in hmap
+		 for (int i = 0; i < maxStr.length(); i++){
+			 //if hm contains the char
+			   if (hm.containsKey(maxStr.charAt(i))){
+				 //get the count and decrease it
+				 int count = hm.get(maxStr.charAt(i)); 
+				 count--; 
+				 if (count == -1){
+					 c = maxStr.charAt(i);
+					 break; 
+				 }
+				 hm.put(maxStr.charAt(i), count); 
+			 } else {
+				//then we've found the char thats different 
+				 c = maxStr.charAt(i);
+				 break; 
+			 }
+		 }
+		
+		
+		return c;
+    }
+}
+//----------------------------- Most Common Word ----------------------------//
+class Solution {
+    public String mostCommonWord(String paragraph, String[] banned) {
+        		
+		//make string lowercase and get rid of punctuation
+		String[] para = paragraph.replaceAll("[^a-zA-Z ]", " ").toLowerCase().split("\\s+");
+
+		//loop through banned array and put words in a set
+		Set<String> bannedSet = new HashSet<String>(); 
+		for (int i = 0; i < banned.length; i++){
+			bannedSet.add(banned[i]); 
+		 }
+		
+		//create hashmap to store word and count
+		 Map<String, Integer> hm = new HashMap<String, Integer>();
+		 
+		 //loop through para and put words into hmap
+		 for (int i = 0; i < para.length; i++){
+			 String word = para[i]; 
+			 if(!bannedSet.contains(word)){
+				 //only if word is not banned, add it to hmap with count
+				 if (hm.containsKey(word)){
+					 //get the count and update it
+					 int count = hm.get(word); 
+					 count++; 
+					 hm.put(word, count); 
+				 } else {
+					 //seeing word for 1st time
+					 hm.put(word, 1); 
+				 }
+			 } 
+		 }
+		 
+		 String largestKey = ""; 
+		 
+		 //find the word with highest count in the hmap 		 
+		 int largestVal = 0; 
+		 for (Map.Entry<String, Integer> entry : hm.entrySet()) {
+			    int val = hm.get(entry.getKey());
+			    if (val > largestVal) {
+			    	largestVal = val;
+			    	largestKey = entry.getKey();
+			    }
+			}
+		
+		return largestKey;
+    }
+}
+//----------------------------- Sort Characters By Freq ----------------------------//
+class Solution {
+    public String frequencySort(String s) {
+        
+		int size = s.length(); 
+
+		//create hashmap to store word and count
+		Map<Character, Integer> hm = new HashMap<Character, Integer>();
+
+		//this array will hold an alist of chars at the freq/index
+		ArrayList<Character> [] arr = new ArrayList[size+1]; 
+
+		//put the char and freq into hmap
+		for (int i = 0; i < s.length(); i++){
+			if (hm.containsKey(s.charAt(i))){
+				//get the count and update it
+				int count = hm.get(s.charAt(i)); 
+				count++; 
+				hm.put(s.charAt(i), count); 
+			} else {
+				//seeing word for 1st time
+				hm.put(s.charAt(i), 1); 
+			} 
+		}
+		
+	
+		//loop through the hashmap and put the entry's key (char)
+		//into the array at the corresponding index (index = frequency)
+		for (Character k : hm.keySet()) {
+			int freq = hm.get(k);   
+			//System.out.println("freq is : " + freq);			
+			if (arr[freq] != null){
+				//an al already exists at that index. add the char to al 
+				arr[freq].add(k); 	
+			} else {
+				//index is empty. create a new al and add the char to it
+				ArrayList<Character> newAl = new ArrayList<Character>(); 
+				newAl.add(k);
+				arr[freq] = newAl; 
+			}
+		}
+
+		//System.out.println("arr is: " + Arrays.toString(arr));
+
+		
+		//will hold the solution
+		StringBuilder sol = new StringBuilder(); 
+		
+		//we want to the most frequent char so loop from other side 
+		for (int i = arr.length-1; i >= 0; i--){
+			//System.out.println("i is: " + i);
+			if (arr[i] != null){
+				//loop through the al to get each char
+				for (char c : arr[i]){
+					//print this char according to its freq
+					for (int k = 1; k <= i; k++){
+						sol.append(c);  
+					}
+				}
+			}
+		}
+
+		return sol.toString();
+    }
+}
+//----------------------------- Set Mismatch ----------------------------//
+class Solution {
+    public int[] findErrorNums(int[] nums) {
+         //get length
+		 int n = nums.length; 
+		 
+		 //this array will hold the solution
+		 int[] sol = new int[2];
+		 
+		 //create a set
+		 Set<Integer> set = new HashSet<Integer>(); 
+		 //loop through array and add numbers to a set 
+		 for (int i = 0; i < nums.length; i++){
+			 if (set.contains(nums[i])){
+				 //this is the number that occurs twice 
+				 sol[0] = nums[i]; 
+			 }
+			 //add num to set
+			 set.add(nums[i]); 
+		 }
+		 		 
+		 //check which number the set is missing 
+		 for (int i = 1; i <= n; i++){
+			 if(!set.contains(i)){
+				 //found missing number
+				 sol[1] = i; 
+			 }
+		 }
+		 		 
+		return sol; 
+	        
+    }
+}
+
+
+
+
