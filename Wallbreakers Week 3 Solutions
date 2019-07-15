@@ -1,0 +1,725 @@
+//Wallbreakers Week 3 Solutions
+
+
+
+//--------------- Greedy Algorithms ------------//
+
+//------------------------- Lemonade change ---------------------------//
+
+class Solution {
+    public boolean lemonadeChange(int[] bills) {
+    	  	//array will store the number of each type of bill
+			int[] amount = new int[21]; 
+			Arrays.fill(amount, 0);
+			
+			//loop through bills
+			for (int i = 0; i < bills.length; i++){
+				if (bills[i] == 5){
+					//increment count at index 5 
+					amount[5]++; 				
+				} else if (bills[i] == 10){
+					//then must give $5 in change
+					amount[5]--; 
+					//increase count of index 10
+					amount[10]++;
+				} else if (bills[i] == 20){
+					//2 ways to give change
+					if (amount[10] >= 1 && amount[5] >= 1){
+							amount[10]--; 
+							amount[5]--; 
+					}
+					else if (amount[5] >= 3){
+						amount[5] = amount[5]-3;  
+					} else {
+						//cannot make change
+						return false; 
+					}	
+					//increment 
+					amount[20]++;
+				}
+				if (amount[5] < 0 || amount[10] < 0 || amount[20] < 0){
+					return false; 
+				}
+			}
+			
+			return true;
+
+    }
+}
+
+//------------------------- Assign Cookies ---------------------------//
+class Solution {
+    public int findContentChildren(int[] g, int[] s) {
+        
+		//sort greedy child array + size array
+		Arrays.sort(g);
+		Arrays.sort(s);
+
+		//keep counter
+		int count = 0; 
+
+		if (g.length == 0 || s.length == 0){
+			return 0; 
+		}
+
+		//loop through both the arrays
+		int k = 0; 
+		int i = 0; 
+		while (k < s.length){			 
+			if (g[i] <= s[k]){
+				//match. increase count. Move k and i up
+				count++; 
+				k++; 		
+				i++; 
+				if (i == g.length){
+					break;  
+				}
+			} else {
+				//nums don't match, check the next cookie size  
+				k++; 
+			}
+		}
+
+		return count;
+    }
+}
+//------------------------- is-subsequence ---------------------------//
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+
+        if (s.length() == 0){
+			return true; 
+		}
+		if (t.length() == 0){
+			return false; 
+		}
+
+		//loop through both the strings
+		int k = 0; 
+		int i = 0; 
+		while (k < t.length()){			 
+			if (s.charAt(i) == t.charAt(k)){
+				//chars match. Move k and i up
+				k++; 		
+				i++; 
+				if (i == s.length()){
+					return true; 
+				}
+			} else {
+				//chars don't match 
+				k++; 
+			}
+		}
+		return false;
+    }
+}
+
+//------------------------- Min num of arrows to burst balloons ---------------------------//
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        	//edge cases 
+		if (points.length == 0){
+			return 0; 
+		}
+		if (points.length == 1){
+			return 1; 
+		}
+		
+		//will hold solution al
+		List<int[]> al = new ArrayList <int[]>(); 
+
+		//sort the array according to 1st column
+		Arrays.sort(points, new Comparator<int[]>() {
+			@Override
+			public int compare(int[] int1, int[] int2) {
+				return int1[0] - int2[0];
+			}
+		});
+
+		//add the 1st item in matrix to al 
+		int[] first = new int[2]; 
+		first[0] = points[0][0]; 
+		first[1] = points[0][1]; 
+		al.add(first); 
+
+			//loop through the interval matrix rows 
+		for (int i = 1; i < points.length; i++){
+			//pop the previous item in al
+			int[] poppedInterval = al.get(al.size() - 1);
+			//get the item in the current row
+			int[] compInterval = points[i]; 
+			//check if overlap
+			if (poppedInterval[0] <= compInterval[0] && compInterval[0] <= poppedInterval[1]){
+				//then they overlap in some way, so get the intersection
+				int [] newTime = new int[2]; 
+				newTime[0] = Math.max(poppedInterval[0], compInterval[0]); 
+				newTime[1] = Math.min(poppedInterval[1], compInterval[1]); 
+				//first delete the old item
+				al.remove(poppedInterval); 
+				//add the new time into al
+				al.add(newTime); 			
+			} else {
+				//they don't overlap so add the current item in the interval array
+				al.add(compInterval);
+
+			}
+		}
+
+	    	    
+		return al.size();
+    }
+}
+
+
+
+
+
+
+
+//--------- Binary Search ----------//
+//------------------------- Binary Search ---------------------------//
+
+
+class Solution {
+    public int search(int[] nums, int target) {
+        int min = 0; 
+		int max = nums.length - 1; 
+		while (max >= min){
+			//get the average 
+			int avg = (int) Math.floor((min + max) /2); 
+			if (nums[avg] == target){
+				return avg;
+			} else if (nums[avg] < target){
+				min = avg + 1; 
+			} else {
+				max = avg - 1; 
+			}
+		}
+		//now max < min
+		return -1;
+    }
+}
+
+//------------------------- Peak Index In Mountain Array   ---------------------------//
+
+class Solution {
+    public int peakIndexInMountainArray(int[] A) {
+        
+     int min = 0; 
+		int max = A.length - 1; 
+		while (min < max){
+			//get the average 
+			int avg = (int) Math.floor((min + max) /2); 
+			if (A[avg] < A[avg+1]){
+				min = avg + 1; 
+			} else {
+				max = avg; 
+			}         
+		}
+		return max;
+        
+    }
+}
+
+
+
+
+
+
+
+//--------- Sorting ----------//
+
+//------------------------- Valid Anagram  ---------------------------//
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int size_s = s.length(); 
+		int size_t = t.length(); 
+		
+		//if size not same, will be false 
+		if (size_s != size_t){
+			return false; 
+		}
+				
+		//convert string to array of chars
+		char[] sArr = s.toCharArray(); 
+		char[] tArr = t.toCharArray(); 
+		
+		//sort both the arrays 
+		Arrays.sort(sArr);
+		Arrays.sort(tArr);
+		
+		//loop
+		for (int i = 0; i < size_s; i++){
+			if (sArr[i] != tArr[i]){
+				return false; 
+			}
+		}
+	
+		return true;
+    }
+}
+
+
+
+//------------------------- Array Partition i  ---------------------------//
+
+class Solution {
+    public int arrayPairSum(int[] nums) {
+        //sort the array 
+		 Arrays.sort(nums);
+		 
+		 //keep count
+		 int sum = 0; 
+		 
+		 //start from index 0 and skip 1. keep adding sums
+		 for (int i = 0; i < nums.length; i = i + 2){
+			 sum = sum  + nums[i]; 
+		 }
+		 
+		return sum;
+    }
+}
+
+
+//------------------------- Merge Intervals ---------------------------//
+class Solution {
+    public int[][] merge(int[][] intervals) {
+
+        if (intervals.length == 0 || intervals.length == 1){
+			return intervals; 
+		}
+		//will hold solution al
+		List<int[]> al = new ArrayList <int[]>(); 
+		
+		//sort the array according to 1st column
+	    Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] int1, int[] int2) {
+                return int1[0] - int2[0];
+            }
+        });
+	    
+	    
+	    //add the 1st item in matrix to al 
+	    int[] first = new int[2]; 
+	    first[0] = intervals[0][0]; 
+	    first[1] = intervals[0][1]; 
+	    al.add(first); 
+	    
+	    //loop through the interval matrix rows 
+	    for (int i = 1; i < intervals.length; i++){
+	    	//pop the previous item in al
+	    	int[] poppedInterval = al.get(al.size() - 1);
+	    	//get the item in the current row
+	    	int[] compInterval = intervals[i]; 
+	    	//get the start and end times of popped
+			int pstart = poppedInterval[0]; 
+			int pend = poppedInterval[1]; 
+			int cstart = compInterval[0]; 
+			int cend = compInterval[1]; 
+			if (pstart <= cstart && cstart <= pend){
+				//then they overlap, so merge them 
+				int [] newTime = new int[2]; 
+				newTime[0] = pstart; 
+				newTime[1] = Math.max(pend, cend); 
+				//first delete the old item
+				al.remove(poppedInterval); 
+				//add the new time into al
+				al.add(newTime); 			
+			} else {
+				//they don't overlap so add the current item in the interval array
+				al.add(compInterval);
+			}
+	    }
+	    
+
+	   //convert the al into 2d matrix   
+	    int[][] solArr = new int[al.size()][2]; 
+	    int i = 0; 
+	    for (int[] a : al){
+	    	solArr[i] = a; 
+	    	i++; 
+	    }  
+		
+		return solArr ;
+    }
+}
+
+//------------------------- Find all Anagrams in a String ---------------------------//
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        
+        
+    	//create an al to hold sol
+		ArrayList<Integer> sol = new ArrayList<Integer>();
+        
+       	if (s.length() == 0 || p.length() == 0 || p.length() > s.length()){
+			return sol;
+		}
+
+		//make char arraylist for string p and sort it
+		ArrayList<Character> alPatt = new ArrayList<Character>();
+		for (int x = 0; x < p.length(); x++){
+			alPatt.add(p.charAt(x));
+		}
+		Collections.sort(alPatt); 
+		
+		//create al for string s
+		ArrayList<Character> als = new ArrayList<Character>();
+		for (int x = 0; x < p.length(); x++){
+			als.add(s.charAt(x));
+		}
+
+		int i = 0; 
+		int j = p.length(); 
+		//sliding window through string s 
+		while (i <= s.length()-p.length()){
+			char c = s.charAt(i); 
+			//sort substring in s
+			Collections.sort(als); 
+			//get the index of c in sorted al 
+			int remInd = als.indexOf(c); 
+			if(als.equals(alPatt)){
+				//if they're equal, then store the index 
+				sol.add(i); 
+			}
+			//slide up. remove char at i and add char at j
+			als.remove(remInd);  
+			if (j == s.length()){
+				break; 
+			} else {
+				als.add(s.charAt(j)); 
+				j++; 
+				i++; 
+			}
+		
+		}
+			return sol;
+        	   
+
+    }
+}
+
+
+
+
+
+
+
+
+//--------- Recursion & Memoization ----------//
+
+//------------------------- Power (x,n) ---------------------------//
+
+class Solution {
+    public double myPow(double x, int n) {
+		
+		if (n == 0){
+			return 1; 
+		}
+		if (n == -1){
+			return (1/x); 
+		}
+		if (n == 1){
+			return x; 
+		}
+		
+		
+		if (n < 0){
+			//n is neg
+			int posNum = -n; 
+			return 1/doPower(x, posNum); 
+		} else {
+			//n is pos
+			return doPower(x, n); 
+		}
+
+	}	
+    
+    
+	public static double doPower(double x, int n) {
+		 
+		double answer = 0.0; 
+		if (n == 0){
+			return 1; 
+		}
+		double solHalf = doPower(x,n/2);
+		
+		if (n % 2 == 0){
+			//if n is even
+			answer = solHalf * solHalf;
+		} else {
+			//n is odd
+			answer = solHalf * solHalf * x;
+		}
+		return answer;
+	}
+}
+
+//------------------------- Best time to buy and sell stock ---------------------------//
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices.length == 0){
+			return 0; 
+		}	
+        
+       	//keep track of max profit 
+		int maxProf = 0; 
+
+		//keep track of lowest stock price 
+		int lowestPrice = prices[0]; 
+		
+		
+		//iterate through the prices array
+		for(int i = 1; i < prices.length; i++){
+			if (prices[i] > lowestPrice){
+				//calc max profit
+				 int diff = prices[i] - lowestPrice; 
+				 if (diff > maxProf){
+					 maxProf = diff; 
+				 }				 
+			} else {
+				//lower than lowest price so update
+				lowestPrice = prices[i]; 
+			}
+		}
+		
+		//highest profit should be the last index in array		
+		return maxProf; 
+    }
+}
+
+//------------------------- edit distance ---------------------------//
+//exceeds time limit when longer input :( 
+
+class Solution {
+    public int minDistance(String word1, String word2) {
+    
+    		//word lengths
+		int w1l = word1.length(); 
+		int w2l = word2.length(); 
+		
+		//edge cases
+		if (w1l == 0 && w2l == 0){
+			return 0;
+		}
+		if (w1l == 0){
+			return w2l;
+		}
+		if (w2l == 0){
+			return w1l;
+		}
+
+
+
+		if(word1.charAt(w1l-1) == word2.charAt(w2l-1)){
+			//get the min distance for 1 char less 
+			return minDistance(word1.substring(0, w1l-1), word2.substring(0, w2l-1));
+		} else {
+			//else chars are different 
+			//get the min + 1 
+			int min1 = minDistance(word1, word2.substring(0, w2l-1)); 
+			int min2 = minDistance(word1.substring(0, w1l-1), word2); 
+			int min3 = minDistance(word1.substring(0, w1l-1), word2.substring(0, w2l-1)); 
+			return 1 + Math.min(min1, Math.min(min2, min3)); 
+		}
+
+    }
+}
+//------------------------- house robber ii ---------------------------//
+//time limit exceeded for larger input :( 
+
+	public static int rob(int[] nums) {
+
+		int n = nums.length; 	
+		
+		//edge cases
+		if (n == 0 || nums == null){
+			return 0; 
+		} else if (n == 1){
+			return nums[0]; 
+		} else {
+			//set index 0 to 0 as one option
+			int temp = nums[0]; 
+			nums[0] = 0; 
+			int sum1 = robRecHelper(nums, n);  
+			
+			//set last index to 0 as 2nd option 
+			nums[0] = temp; 
+			nums[n-1] = 0; 
+			int sum2 = robRecHelper(nums, n);  			
+			return Math.max(sum1, sum2); 
+		}
+
+	}
+	
+
+	public static int robRecHelper(int[] nums, int n) {
+		if (n == 0 || nums == null){
+			return 0; 
+		} 
+		if (n == 1){
+			return nums[0]; 
+		}
+		if (n == 2){
+			//get the larger of the 2
+			return Math.max(nums[0], nums[1]); 
+		}
+		else {
+
+			//does rob current house 
+			int sum1 = nums[n-1] + robRecHelper(nums, n-2); 
+
+			//doesn't rob current house 
+			int sum2 = robRecHelper(nums, n-1);
+
+			return Math.max(sum1, sum2); 
+		}
+
+	}
+
+
+
+
+
+
+//--------- Dynamic Programming ----------//
+
+//------------------------- edit distance ---------------------------//
+
+class Solution {
+    public int minDistance(String word1, String word2) {
+        //edge cases
+		if (word1.length() == 0 && word2.length() == 0){
+			return 0;
+		}
+		if (word1.length() == 0){
+			return word2.length();
+		}
+		if (word2.length() == 0){
+			return word1.length();
+		}
+		
+		//create a 2d array
+		int[][] matrix = new int[word1.length() + 1][word2.length() + 1]; 
+		int rows = matrix.length; 
+		int cols = matrix[0].length; 
+			
+		//fill first the row across
+		for(int j = 0; j < cols; j++){
+			matrix[0][j] = j; 
+		}
+		
+		
+		//fill the first column
+		for(int i = 0; i < rows; i++){
+			matrix[i][0] = i; 
+		}
+
+		
+		//use dp, go through matrix 
+		for(int i = 1; i < rows; i++){
+			for(int j = 1; j < cols; j++){ 
+				//if the chars are same 
+				 if(word1.charAt(i-1) == word2.charAt(j-1)){
+					 //get the min distance for 1 char less 
+					 matrix[i][j] = matrix[i-1][j-1]; 
+				 } else {
+					 //else chars are different 
+					 //get the min + 1 
+					 int min1 = Math.min(matrix[i][j-1], matrix[i-1][j]); 
+					 int min2 = Math.min(min1, matrix[i-1][j-1]); 
+					 matrix[i][j] = 1 + min2; 
+				 }
+			} 
+		}
+		
+
+		
+		//return min 
+        return matrix[rows-1][cols-1]; 
+    }
+}
+
+//------------------------- house robber ii ---------------------------//
+class Solution {
+    public int rob(int[] nums) {
+			
+		int n = nums.length; 	
+
+		//edge cases
+		if (n == 0 || nums == null){
+			return 0; 
+		} else if (n == 1){
+			return nums[0]; 
+		} else {
+			//set index 0 to 0 as one option
+			int temp = nums[0]; 
+			nums[0] = 0; 
+			int sum1 = robRecHelper(nums, n);  
+
+			//set last index to 0 as 2nd option 
+			nums[0] = temp; 
+			nums[n-1] = 0; 
+			int sum2 = robRecHelper(nums, n);  
+			return Math.max(sum1, sum2); 
+		}
+
+       
+    }
+    
+    	public static int robRecHelper(int[] nums, int n) {
+
+		//create dp matrix
+		int[] arr = new int[n]; 
+
+		if (n == 0 || nums == null){
+			return 0; 
+		} 
+		if (n == 1){
+			return nums[0]; 
+		}
+		if (n == 2){
+			//get the larger of the 2
+			return Math.max(nums[0], nums[1]); 
+		}
+		else {
+			//size is 3 or larger
+			//intiialize array
+			arr[0] = nums[0]; 
+			arr[1] = Math.max(nums[0], nums[1]);
+
+
+			for (int i = 2; i < n; i++){
+				//does rob current house 
+				int sum1 = nums[i] + arr[i-2];  
+				//doesn't rob current house 
+				int sum2 = arr[i-1];
+				arr[i] = Math.max(sum1, sum2); 
+			}
+
+			//System.out.println("sol arr: " + Arrays.toString(arr));
+			//return 
+			return arr[n-1];
+
+		}
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
